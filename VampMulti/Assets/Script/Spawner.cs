@@ -5,15 +5,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Fusion.Addons.Physics;
 
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner _runner;
+
     async void StartGame(GameMode mode)
     {
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
+        gameObject.AddComponent<RunnerSimulatePhysics3D>();
+
 
         // Create the NetworkSceneInfo from the current scene
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
@@ -69,6 +73,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             _spawnedCharacters.Remove(player);
         }
     }
+    private bool _mouseButton0;
+    private void Update()
+    {
+        _mouseButton0 = _mouseButton0 || Input.GetMouseButton(0);
+    }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         var data = new NetworkInputData();
@@ -84,6 +93,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (Input.GetKey(KeyCode.D))
             data.direction += Vector3.right;
+
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
+        _mouseButton0 = false;
 
         input.Set(data);
     }
