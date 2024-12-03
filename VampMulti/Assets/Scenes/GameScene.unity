@@ -585,6 +585,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: d92a0337869c3f646aa40d0c74e17a37, type: 2}
+    - target: {fileID: 3087266090974317378, guid: 4d918ae35847075448621e7e3cb7a381,
+        type: 3}
+      propertyPath: maxSpeed
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4978694607155604939, guid: 4d918ae35847075448621e7e3cb7a381,
         type: 3}
       propertyPath: SortKey
