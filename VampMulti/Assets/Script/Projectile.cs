@@ -8,9 +8,14 @@ public class Projectile : NetworkBehaviour
     [Networked] private TickTimer life { get; set; }
     [SerializeField] private float speed = 20;
     [SerializeField] private int points = 3;
+    private bool isActive;
+    private void Awake()
+    {
+        isActive = false;
+    }
     public override void FixedUpdateNetwork()
     {
-        if (life.Expired(Runner))
+        if (life.Expired(Runner) || isActive)
         {
             Runner.Despawn(Object);
         }
@@ -29,11 +34,11 @@ public class Projectile : NetworkBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<Player>().points -= points;
-            Runner.Despawn(Object);
+            isActive = true;
         }
         if (!collision.gameObject.CompareTag("Pickable"))
         {
-            Runner.Despawn(Object);
+            isActive = true;
         }
     }
 }

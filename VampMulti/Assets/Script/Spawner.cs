@@ -142,13 +142,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
         data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
         _mouseButton0 = false;
-        /*if (objectSpawner.activeSelf)
-        {
-            Debug.Log("we");
-            data.spawnPosition1 = ObjectSpawn.Instance._pointsSpawn[ObjectSpawn.Instance.RandomNumber(ObjectSpawn.Instance._pointsSpawn.Length)].position;
-            data.spawnPosition2 = ObjectSpawn.Instance._projectileSpawn[ObjectSpawn.Instance.RandomNumber(ObjectSpawn.Instance._projectileSpawn.Length)].position;
-            data.spawnPosition3 = ObjectSpawn.Instance._speedUpSpawn[ObjectSpawn.Instance.RandomNumber(ObjectSpawn.Instance._speedUpSpawn.Length)].position;
-        }*/
+
          input.Set(data);
     }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
@@ -173,6 +167,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         int i = 0;
         foreach (var player in _spawnedCharacters.Values)
         {
+            Debug.Log(player);
             playerUI[i].SetActive(true);
             playersInGamePointsUI[i].text = $"Points: {player.GetComponent<Player>().points}";
             i++;
