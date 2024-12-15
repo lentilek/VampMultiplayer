@@ -25,7 +25,7 @@ public class Player : NetworkBehaviour
         isPlaying = false;
         _cc = GetComponent<NetworkCharacterController>();
         points = 0;
-        GetComponent<NetworkCharacterController>().maxSpeed = speed;
+        _cc.maxSpeed = speed;
     }
 
     public override void FixedUpdateNetwork()
@@ -37,8 +37,6 @@ public class Player : NetworkBehaviour
             if (data.direction.sqrMagnitude > 0)
                 _forward = data.direction;
 
-            if (data.direction.sqrMagnitude > 0)
-                _forward = data.direction;
             if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner))
             {
                 if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0)
@@ -59,7 +57,7 @@ public class Player : NetworkBehaviour
     public void SpeedUp(float speedUp, float time)
     {
         StopAllCoroutines();
-        GetComponent<NetworkCharacterController>().maxSpeed = speedUp;
+        _cc.maxSpeed = speedUp;
         //boostIcon.SetActive(true);
         StartCoroutine(Speed(time));
     }
@@ -67,7 +65,7 @@ public class Player : NetworkBehaviour
     IEnumerator Speed(float time)
     {
         yield return new WaitForSeconds(time);
-        GetComponent<NetworkCharacterController>().maxSpeed = speed;
+        _cc.maxSpeed = speed;
         //boostIcon.SetActive(false);
     }
     public void StartGame(float time)

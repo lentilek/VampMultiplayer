@@ -29,6 +29,7 @@ public class Projectile : NetworkBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<Player>().points -= points;
+            Runner.Despawn(Object);
         }
         if (!collision.gameObject.CompareTag("Pickable"))
         {

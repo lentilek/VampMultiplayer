@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1461806991790633579}
   - component: {fileID: 1204434870167463636}
   - component: {fileID: 5834257594571853185}
+  - component: {fileID: 6131786252200267967}
   m_Layer: 0
   m_Name: Point
   m_TagString: Pickable
@@ -54,6 +55,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 5834257594571853185}
+  - {fileID: 6131786252200267967}
 --- !u!135 &1204434870167463636
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -89,6 +91,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeTime: 5
   points: 2
+--- !u!114 &6131786252200267967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2808991404768015135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &4501093273523930116
 GameObject:
   m_ObjectHideFlags: 0
