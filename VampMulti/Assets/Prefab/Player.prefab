@@ -100,7 +100,7 @@ MonoBehaviour:
   jumpImpulse: 8
   acceleration: 10
   braking: 10
-  maxSpeed: 10
+  maxSpeed: 9
   rotationSpeed: 30
 --- !u!114 &3088439483215488364
 MonoBehaviour:
@@ -115,10 +115,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points: 0
-  speed: 10
+  speed: 9
   projectileNumber: 2
   _prefabProjectile: {fileID: 4115328374141218942, guid: a311c6abe763f62418491c23c3e55ae3,
     type: 3}
+  isPlaying: 0
 --- !u!65 &443710820090628384
 BoxCollider:
   m_ObjectHideFlags: 0

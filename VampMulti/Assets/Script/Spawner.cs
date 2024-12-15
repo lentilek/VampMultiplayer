@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Fusion.Addons.Physics;
+using TMPro;
+using Unity.VisualScripting;
 
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -13,8 +15,12 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private GameObject hub;
     [SerializeField] private GameObject objectSpawner;
     [SerializeField] private GameObject startButton;
+    [SerializeField] private GameObject[] playerUI;
+    [SerializeField] private TextMeshProUGUI[] playerUIPoints;
+    private List<TextMeshProUGUI> playersInGamePointsUI = new List<TextMeshProUGUI>();
     private void Awake()
     {
+        playersInGamePointsUI.Clear();
         hub.SetActive(true);
         startButton.SetActive(false);
         objectSpawner.SetActive(false);
@@ -75,22 +81,32 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 startButton.SetActive(true);            
                 spawnPosition = new Vector3(-8, 1f, 3);
+                playerUI[0].SetActive(true);
+                playersInGamePointsUI.Add(playerUIPoints[0]);
             }else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 3)
             {
                 spawnPosition = new Vector3(8, 1f, 3);
-            }else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 4)
+                playerUI[1].SetActive(true);
+                playersInGamePointsUI.Add(playerUIPoints[1]);
+            }
+            else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 4)
             {
                 spawnPosition = new Vector3(-8, 1, -4);
-            }else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 5)
+                playerUI[2].SetActive(true);
+                playersInGamePointsUI.Add(playerUIPoints[2]);
+            }
+            else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 5)
             {
                 spawnPosition = new Vector3(8, 1, -4);
+                playerUI[3].SetActive(true);
+                playersInGamePointsUI.Add(playerUIPoints[3]);
             }
             // Create a unique position for the player
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             // Keep track of the player avatars for easy access
             _spawnedCharacters.Add(player, networkPlayerObject);
             //Debug.Log(player.RawEncoded % runner.Config.Simulation.PlayerCount);
-
+            PointsUpdate();
         }
     }
 
@@ -106,6 +122,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     private void Update()
     {
         _mouseButton0 = _mouseButton0 || Input.GetMouseButton(0);
+        PointsUpdate();
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
@@ -144,4 +161,14 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+
+    public void PointsUpdate()
+    {
+        int i = 0;
+        foreach (var player in _spawnedCharacters.Values)
+        {
+            playersInGamePointsUI[i].text = $"Points: {player.GetComponent<Player>().points}";
+            i++;
+        }
+    }
 }

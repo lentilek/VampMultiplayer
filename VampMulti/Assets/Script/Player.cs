@@ -13,6 +13,7 @@ public class Player : NetworkBehaviour
     public float speed = 10;
     public int projectileNumber = 1;
     [SerializeField] private Projectile _prefabProjectile;
+    //[SerializeField] private GameObject boostIcon;
     private Vector3 _forward = Vector3.forward;
     [Networked] private TickTimer delay { get; set; }
 
@@ -20,6 +21,7 @@ public class Player : NetworkBehaviour
 
     private void Awake()
     {
+        //boostIcon.SetActive(false);
         isPlaying = false;
         _cc = GetComponent<NetworkCharacterController>();
         points = 0;
@@ -58,6 +60,7 @@ public class Player : NetworkBehaviour
     {
         StopAllCoroutines();
         GetComponent<NetworkCharacterController>().maxSpeed = speedUp;
+        //boostIcon.SetActive(true);
         StartCoroutine(Speed(time));
     }
 
@@ -65,6 +68,7 @@ public class Player : NetworkBehaviour
     {
         yield return new WaitForSeconds(time);
         GetComponent<NetworkCharacterController>().maxSpeed = speed;
+        //boostIcon.SetActive(false);
     }
     public void StartGame(float time)
     {
