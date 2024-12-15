@@ -1,35 +1,31 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Fusion;
 
-public class Projectile : NetworkBehaviour
+public class Points : NetworkBehaviour
 {
     [Networked] private TickTimer life { get; set; }
-    [SerializeField] private float speed = 20;
-    [SerializeField] private int points = 3;
+    [SerializeField] private float lifeTime = 5f;
+    [SerializeField] private int points = 2;
     public override void FixedUpdateNetwork()
     {
         if (life.Expired(Runner))
         {
             Runner.Despawn(Object);
         }
-        else
-        {
-            transform.position += speed * transform.forward * Runner.DeltaTime;
-        }
     }
 
     public void Init()
     {
-        life = TickTimer.CreateFromSeconds(Runner, 5.0f);
+        life = TickTimer.CreateFromSeconds(Runner, lifeTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if (other.tag == "Player")
         {
-            other.GetComponent<Player>().points -= points;
+            other.GetComponent<Player>().points += points;
         }
         Runner.Despawn(Object);
     }
