@@ -10,7 +10,13 @@ using Fusion.Addons.Physics;
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner _runner;
-
+    [SerializeField] private GameObject hub;
+    [SerializeField] private GameObject objectSpawner;
+    private void Awake()
+    {
+        hub.SetActive(true);
+        objectSpawner.SetActive(false);
+    }
     async void StartGame(GameMode mode)
     {
         // Create the Fusion runner and let it know that we will be providing user input
@@ -36,19 +42,15 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
     }
-    private void OnGUI()
+    public void StartHost()
     {
-        if (_runner == null)
-        {
-            if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
-            {
-                StartGame(GameMode.Host);
-            }
-            if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
-            {
-                StartGame(GameMode.Client);
-            }
-        }
+        hub.SetActive(false);
+        StartGame(GameMode.Host);
+    }
+    public void StartClient()
+    {
+        hub.SetActive(false);
+        StartGame(GameMode.Client);
     }
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
@@ -57,11 +59,27 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (runner.IsServer)
         {
+            Vector3 spawnPosition = new Vector3(0,0,0);
+            if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 2)
+            {
+                objectSpawner.SetActive(true);            
+                spawnPosition = new Vector3(-8, 1f, 3);
+            }else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 3)
+            {
+                spawnPosition = new Vector3(8, 1f, 3);
+            }else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 4)
+            {
+                spawnPosition = new Vector3(-8, 1, -4);
+            }else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 5)
+            {
+                spawnPosition = new Vector3(8, 1, -4);
+            }
             // Create a unique position for the player
-            Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount), 1, 0);
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             // Keep track of the player avatars for easy access
             _spawnedCharacters.Add(player, networkPlayerObject);
+            //Debug.Log(player.RawEncoded % runner.Config.Simulation.PlayerCount);
+
         }
     }
 
