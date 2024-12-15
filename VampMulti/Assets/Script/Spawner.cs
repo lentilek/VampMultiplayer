@@ -12,9 +12,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner _runner;
     [SerializeField] private GameObject hub;
     [SerializeField] private GameObject objectSpawner;
+    [SerializeField] private GameObject startButton;
     private void Awake()
     {
         hub.SetActive(true);
+        startButton.SetActive(false);
         objectSpawner.SetActive(false);
     }
     async void StartGame(GameMode mode)
@@ -52,6 +54,15 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         hub.SetActive(false);
         StartGame(GameMode.Client);
     }
+    public void StartGame()
+    {
+        foreach (var player in _spawnedCharacters.Values)
+        {
+            player.GetComponent<Player>().StartGame(1f);
+        }
+        objectSpawner.SetActive(true);
+        startButton.SetActive(false);
+    }
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
@@ -62,7 +73,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             Vector3 spawnPosition = new Vector3(0,0,0);
             if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 2)
             {
-                objectSpawner.SetActive(true);            
+                startButton.SetActive(true);            
                 spawnPosition = new Vector3(-8, 1f, 3);
             }else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 3)
             {

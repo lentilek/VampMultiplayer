@@ -24,13 +24,15 @@ public class Projectile : NetworkBehaviour
     {
         life = TickTimer.CreateFromSeconds(Runner, 5.0f);
     }
-
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if(other.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
-            other.GetComponent<Player>().points -= points;
+            collision.gameObject.GetComponent<Player>().points -= points;
         }
-        Runner.Despawn(Object);
+        if (!collision.gameObject.CompareTag("Pickable"))
+        {
+            Runner.Despawn(Object);
+        }
     }
 }

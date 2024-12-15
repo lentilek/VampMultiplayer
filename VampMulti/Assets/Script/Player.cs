@@ -16,8 +16,11 @@ public class Player : NetworkBehaviour
     private Vector3 _forward = Vector3.forward;
     [Networked] private TickTimer delay { get; set; }
 
+    [HideInInspector] public bool isPlaying;
+
     private void Awake()
     {
+        isPlaying = false;
         _cc = GetComponent<NetworkCharacterController>();
         points = 0;
         GetComponent<NetworkCharacterController>().maxSpeed = speed;
@@ -25,7 +28,7 @@ public class Player : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData data))
+        if (GetInput(out NetworkInputData data) && isPlaying)
         {
             data.direction.Normalize();
             _cc.Move(5 * data.direction * Runner.DeltaTime);
@@ -62,5 +65,14 @@ public class Player : NetworkBehaviour
     {
         yield return new WaitForSeconds(time);
         GetComponent<NetworkCharacterController>().maxSpeed = speed;
+    }
+    public void StartGame(float time)
+    {
+        StartCoroutine(WaitForGame(time));
+    }
+    IEnumerator WaitForGame(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isPlaying = true;
     }
 }
