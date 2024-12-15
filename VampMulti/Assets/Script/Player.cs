@@ -50,4 +50,17 @@ public class Player : NetworkBehaviour
             }
         }
     }
+
+    public void SpeedUp(float speedUp, float time)
+    {
+        StopAllCoroutines();
+        GetComponent<NetworkCharacterController>().maxSpeed = speedUp;
+        StartCoroutine(Speed(time));
+    }
+
+    IEnumerator Speed(float time)
+    {
+        yield return new WaitForSeconds(time);
+        GetComponent<NetworkCharacterController>().maxSpeed = speed;
+    }
 }
