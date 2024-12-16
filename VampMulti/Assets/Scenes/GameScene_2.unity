@@ -17304,6 +17304,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2793857880143800590, guid: 4aed2c54c8785c24cba77a56a251453a,
         type: 3}
+      propertyPath: timeMax
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2793857880143800590, guid: 4aed2c54c8785c24cba77a56a251453a,
+        type: 3}
       propertyPath: timerTXT
       value: 
       objectReference: {fileID: 842941364}

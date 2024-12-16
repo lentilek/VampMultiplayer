@@ -27,7 +27,13 @@ public class Player : NetworkBehaviour
         points = 0;
         _cc.maxSpeed = speed;
     }
-
+    private void Update()
+    {
+        if(Timer.Instance.currentTime <= 0 && isPlaying)
+        {
+            Endgame();
+        }
+    }
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputData data) && isPlaying)
@@ -77,5 +83,14 @@ public class Player : NetworkBehaviour
         yield return new WaitForSeconds(time);
         isPlaying = true;
         Timer.Instance.StartTiming();
+    }
+    public void Endgame()
+    {
+        isPlaying = false;
+        Time.timeScale = 0f;
+        if(ObjectSpawn.Instance!= null)
+        {
+            ObjectSpawn.Instance.gameObject.SetActive(false);
+        }
     }
 }
