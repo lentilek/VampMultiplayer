@@ -27,6 +27,7 @@ public class Timer : MonoBehaviour
     }
     public void StartTiming()
     {
+        Debug.Log("bleh");
         hub.SetActive(false);
         StartCoroutine(Timing());
     }

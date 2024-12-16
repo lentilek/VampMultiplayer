@@ -17,6 +17,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private GameObject startButton;
     [SerializeField] private GameObject[] playerUI;
     [SerializeField] private TextMeshProUGUI[] playerUIPoints;
+    [SerializeField] private GameObject[] playerAvatars;
     private List<TextMeshProUGUI> playersInGamePointsUI = new List<TextMeshProUGUI>();
     private void Awake()
     {
@@ -82,6 +83,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 startButton.SetActive(true);            
                 spawnPosition = new Vector3(-8, 1f, 3);
                 playerUI[0].SetActive(true);
+                playerAvatars[0].SetActive(true);
                 playersInGamePointsUI.Add(playerUIPoints[0]);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[0], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
@@ -90,6 +92,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 spawnPosition = new Vector3(8, 1f, 3);
                 playerUI[1].SetActive(true);
+                playerAvatars[1].SetActive(true);
                 playersInGamePointsUI.Add(playerUIPoints[1]);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[1], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
@@ -98,6 +101,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 spawnPosition = new Vector3(-8, 1, -4);
                 playerUI[2].SetActive(true);
+                playerAvatars[2].SetActive(true);
                 playersInGamePointsUI.Add(playerUIPoints[2]);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[2], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
@@ -106,6 +110,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 spawnPosition = new Vector3(8, 1, -4);
                 playerUI[3].SetActive(true);
+                playerAvatars[3].SetActive(true);
                 playersInGamePointsUI.Add(playerUIPoints[3]);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[3], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
@@ -130,6 +135,10 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         _mouseButton0 = _mouseButton0 || Input.GetMouseButton(0);
         PointsUpdate();
+        if (GeneralUI.Instance.endGame)
+        {
+            EndGame();
+        }
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
@@ -174,10 +183,36 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         int i = 0;
         foreach (var player in _spawnedCharacters.Values)
         {
-            Debug.Log(player);
+            Debug.Log("weeee");
             playerUI[i].SetActive(true);
             playersInGamePointsUI[i].text = $"Points: {player.GetComponent<Player>().points}";
             i++;
+        }
+    }
+    public void EndGame()
+    {
+        int i = 0;
+        int pointsBest = -1;
+        List<Player> winners= new List<Player>();
+        foreach(var player in _spawnedCharacters.Values)
+        {
+            playerUI[i].SetActive(false);
+            playerUI[i+4].SetActive(true);
+            playerUIPoints[i+4].text = $"Points: {player.GetComponent<Player>().points}";
+            if(player.GetComponent<Player>().points == pointsBest)
+            {
+                winners.Add(player.GetComponent<Player>());
+            }else if(player.GetComponent<Player>().points > pointsBest || i == 0)
+            {
+                winners.Clear();
+                winners.Add(player.GetComponent<Player>());
+                pointsBest = player.GetComponent<Player>().points;
+            }
+            i++;
+        }
+        foreach (Player player in winners)
+        {
+            player.Won();
         }
     }
     public void Destroy()

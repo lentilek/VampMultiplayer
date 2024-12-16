@@ -92,4 +92,8 @@ public class Player : NetworkBehaviour
             ObjectSpawn.Instance.gameObject.SetActive(false);
         }
     }
+    public void Won()
+    {
+        GeneralUI.Instance.Win();
+    }
 }

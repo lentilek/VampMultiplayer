@@ -10,6 +10,7 @@ public class GeneralUI : MonoBehaviour
     [SerializeField] private GameObject gameEnd;
     [SerializeField] private GameObject won;
     [SerializeField] private GameObject lost;
+    [HideInInspector] public bool endGame;
     private void Awake()
     {
         if (Instance == null)
@@ -21,6 +22,7 @@ public class GeneralUI : MonoBehaviour
             Destroy(Instance.gameObject);
             Instance = this;
         }
+        endGame = false;
         gameEnd.SetActive(false);
         won.SetActive(false);
         lost.SetActive(false);
@@ -31,6 +33,13 @@ public class GeneralUI : MonoBehaviour
     }
     public void GameEnd()
     {
-        gameEnd.SetActive(true);
+        gameEnd.SetActive(true);        
+        lost.SetActive(true);
+        endGame = true;
+    }
+    public void Win()
+    {
+        lost.SetActive(false);
+        won.SetActive(true);
     }
 }
