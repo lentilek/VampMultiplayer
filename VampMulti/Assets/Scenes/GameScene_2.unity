@@ -19438,7 +19438,7 @@ PrefabInstance:
     - target: {fileID: 2793857880143800590, guid: 4aed2c54c8785c24cba77a56a251453a,
         type: 3}
       propertyPath: timeMax
-      value: 120
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2793857880143800590, guid: 4aed2c54c8785c24cba77a56a251453a,
         type: 3}
@@ -19523,6 +19523,11 @@ PrefabInstance:
       propertyPath: hub
       value: 
       objectReference: {fileID: 939733140}
+    - target: {fileID: 4812839603194712366, guid: e717944bc185f984799379a54050c0d7,
+        type: 3}
+      propertyPath: hubBig
+      value: 
+      objectReference: {fileID: 1028199141}
     - target: {fileID: 4812839603194712366, guid: e717944bc185f984799379a54050c0d7,
         type: 3}
       propertyPath: startButton

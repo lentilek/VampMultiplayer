@@ -11,11 +11,11 @@ public class Projectile : NetworkBehaviour
     private bool isActive;
     private void Awake()
     {
-        isActive = false;
+        isActive = true;
     }
     public override void FixedUpdateNetwork()
     {
-        if (life.Expired(Runner) || isActive)
+        if (life.Expired(Runner) || !isActive)
         {
             Runner.Despawn(Object);
         }
@@ -34,11 +34,11 @@ public class Projectile : NetworkBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<Player>().points -= points;
-            isActive = true;
+            isActive = false;
         }
         if (!collision.gameObject.CompareTag("Pickable"))
         {
-            isActive = true;
+            isActive = false;
         }
     }
 }

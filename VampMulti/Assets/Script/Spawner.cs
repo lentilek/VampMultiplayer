@@ -13,6 +13,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner _runner;
     [SerializeField] private GameObject hub;
+    [SerializeField] private GameObject hubBig;
     [SerializeField] private GameObject objectSpawner;
     [SerializeField] private GameObject startButton;
     [SerializeField] private GameObject[] playerUI;
@@ -59,6 +60,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     public void StartClient()
     {
         hub.SetActive(false);
+        hubBig.SetActive(false);
         StartGame(GameMode.Client);
     }
     public void StartGame()
@@ -131,9 +133,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
     private bool _mouseButton0;
+    private float time;
     private void Update()
     {
         _mouseButton0 = _mouseButton0 || Input.GetMouseButton(0);
+        time = Timer.Instance.currentTime;
         PointsUpdate();
         if (GeneralUI.Instance.endGame)
         {
@@ -159,7 +163,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
         _mouseButton0 = false;
 
-         input.Set(data);
+        input.Set(data);
     }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
@@ -192,14 +196,14 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     public void EndGame()
     {
         int i = 0;
-        int pointsBest = -1;
-        List<Player> winners= new List<Player>();
+        //int pointsBest = -1;
+        //List<Player> winners= new List<Player>();
         foreach(var player in _spawnedCharacters.Values)
         {
             playerUI[i].SetActive(false);
             playerUI[i+4].SetActive(true);
             playerUIPoints[i+4].text = $"Points: {player.GetComponent<Player>().points}";
-            if(player.GetComponent<Player>().points == pointsBest)
+            /*if(player.GetComponent<Player>().points == pointsBest)
             {
                 winners.Add(player.GetComponent<Player>());
             }else if(player.GetComponent<Player>().points > pointsBest || i == 0)
@@ -207,13 +211,13 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 winners.Clear();
                 winners.Add(player.GetComponent<Player>());
                 pointsBest = player.GetComponent<Player>().points;
-            }
+            }*/
             i++;
         }
-        foreach (Player player in winners)
+        /*foreach (Player player in winners)
         {
             player.Won();
-        }
+        }*/
     }
     public void Destroy()
     {

@@ -34,7 +34,7 @@ public class GeneralUI : MonoBehaviour
     public void GameEnd()
     {
         gameEnd.SetActive(true);        
-        lost.SetActive(true);
+        //lost.SetActive(true);
         endGame = true;
     }
     public void Win()

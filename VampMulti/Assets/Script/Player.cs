@@ -19,6 +19,9 @@ public class Player : NetworkBehaviour
 
     [HideInInspector] public bool isPlaying;
 
+    private bool canShoot;
+    private int speedBoost;
+
     private void Awake()
     {
         //boostIcon.SetActive(false);
@@ -26,6 +29,8 @@ public class Player : NetworkBehaviour
         _cc = GetComponent<NetworkCharacterController>();
         points = 0;
         _cc.maxSpeed = speed;
+        canShoot = true;
+        speedBoost = 0;
     }
     private void Update()
     {
@@ -45,8 +50,10 @@ public class Player : NetworkBehaviour
 
             if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner))
             {
-                if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0)
+                if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0 && canShoot)
                 {
+                    canShoot = false;
+                    StartCoroutine(ShootingNot());
                     projectileNumber--;
                     delay = TickTimer.CreateFromSeconds(Runner, 0.5f);
                     Runner.Spawn(_prefabProjectile,
@@ -62,8 +69,8 @@ public class Player : NetworkBehaviour
 
     public void SpeedUp(float speedUp, float time)
     {
-        StopAllCoroutines();
         _cc.maxSpeed = speedUp;
+        speedBoost++;
         //boostIcon.SetActive(true);
         StartCoroutine(Speed(time));
     }
@@ -71,7 +78,11 @@ public class Player : NetworkBehaviour
     IEnumerator Speed(float time)
     {
         yield return new WaitForSeconds(time);
-        _cc.maxSpeed = speed;
+        speedBoost--;
+        if(speedBoost == 0)
+        {
+            _cc.maxSpeed = speed;
+        }
         //boostIcon.SetActive(false);
     }
     public void StartGame(float time)
@@ -84,16 +95,28 @@ public class Player : NetworkBehaviour
         isPlaying = true;
         Timer.Instance.StartTiming();
     }
+    IEnumerator ShootingNot()
+    {
+        yield return new WaitForSeconds(1);
+        canShoot = true;
+    }
     public void Endgame()
     {
+        Debug.Log("miau");
         isPlaying = false;
         if(ObjectSpawn.Instance!= null)
         {
             ObjectSpawn.Instance.gameObject.SetActive(false);
         }
     }
-    public void Won()
+    public void MainMenu()
+    {
+        GameObject go = FindObjectOfType<Spawner>().gameObject;
+        Destroy(go);
+        SceneManager.LoadScene(0);
+    }
+    /*public void Won()
     {
         GeneralUI.Instance.Win();
-    }
+    }*/
 }
