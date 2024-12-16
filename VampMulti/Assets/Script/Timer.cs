@@ -9,6 +9,7 @@ public class Timer : MonoBehaviour
     public float timeMax;
     public float currentTime;
     [SerializeField] private TextMeshProUGUI timerTXT;
+    [SerializeField] private GameObject hub;
     private void Awake()
     {
         if (Instance == null)
@@ -22,9 +23,11 @@ public class Timer : MonoBehaviour
         }
         StopAllCoroutines();
         currentTime = timeMax;
+        hub.SetActive(true);
     }
     public void StartTiming()
     {
+        hub.SetActive(false);
         StartCoroutine(Timing());
     }
     IEnumerator Timing()
@@ -35,6 +38,7 @@ public class Timer : MonoBehaviour
             yield return new WaitForSeconds(1f);
             currentTime--;
         } while (currentTime >= 0);
+        GeneralUI.Instance.GameEnd();
     }
     private void Display()
     {

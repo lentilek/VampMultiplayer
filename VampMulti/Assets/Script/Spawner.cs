@@ -180,4 +180,8 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             i++;
         }
     }
+    public void Destroy()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -87,7 +87,6 @@ public class Player : NetworkBehaviour
     public void Endgame()
     {
         isPlaying = false;
-        Time.timeScale = 0f;
         if(ObjectSpawn.Instance!= null)
         {
             ObjectSpawn.Instance.gameObject.SetActive(false);
