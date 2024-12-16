@@ -44,5 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d14f993ff9698c4a953ad6699f8edd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hub: {fileID: 0}
+  objectSpawner: {fileID: 0}
+  startButton: {fileID: 0}
+  playerUI: []
+  playerUIPoints: []
   _playerPrefab:
-    RawGuidValue: 4d918ae35847075448621e7e3cb7a381
+  - RawGuidValue: 4d918ae35847075448621e7e3cb7a381
+  - RawGuidValue: df7fb0330e322494aa8cf4f65421198e
+  - RawGuidValue: 0d42e335f74c1f941b2415fef2b36f09
+  - RawGuidValue: 1247d48640c31a24692c98a9772f11f6
