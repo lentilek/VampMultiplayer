@@ -76,5 +76,6 @@ public class Player : NetworkBehaviour
     {
         yield return new WaitForSeconds(time);
         isPlaying = true;
+        Timer.Instance.StartTiming();
     }
 }
