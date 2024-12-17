@@ -1040,7 +1040,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pointsPrefab: {fileID: 5834257594571853185, guid: 7775a53cb424c844ca6eb37d99e8ec36,
     type: 3}
-  timeBetweenPoints: 1.3
+  timeBetweenPoints: 0.4
   _pointsSpawn:
   - {fileID: 339619622029361981}
   - {fileID: 5792221815029507031}
@@ -1060,7 +1060,7 @@ MonoBehaviour:
   - {fileID: 2426680440725681878}
   _projectilePrefab: {fileID: 8100371511877340173, guid: fa85479e8f74e4d4290ea03ddcd3b2c2,
     type: 3}
-  timeBetweenProjectiles: 2.5
+  timeBetweenProjectiles: 0.9
   _projectileSpawn:
   - {fileID: 7291897983768924150}
   - {fileID: 9102258662142744708}
@@ -1076,7 +1076,7 @@ MonoBehaviour:
   - {fileID: 1825272420375192410}
   _speedUpPrefab: {fileID: 7564693290918701458, guid: 623ee4c596f0faa4d94f5984c31b472d,
     type: 3}
-  timeBetweenSpeedUp: 6
+  timeBetweenSpeedUp: 3
   _speedUpSpawn:
   - {fileID: 4915466483924354940}
   - {fileID: 3072588387052693844}
