@@ -27,6 +27,15 @@ public class GeneralUI : MonoBehaviour
         won.SetActive(false);
         lost.SetActive(false);
     }
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            GameObject go = FindObjectOfType<Spawner>().gameObject;
+            Destroy(go);
+            SceneManager.LoadScene(0);
+        }
+    }
     public void MainMenu()
     {
         SceneManager.LoadScene(0);

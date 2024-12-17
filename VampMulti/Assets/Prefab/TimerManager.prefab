@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa73f64f38e8f3649a1abecb6166b83d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeMax: 120
+  timeMax: 180
   currentTime: 0
   timerTXT: {fileID: 0}
+  hub: {fileID: 0}
