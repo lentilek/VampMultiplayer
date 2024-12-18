@@ -47,8 +47,8 @@ public class Player : NetworkBehaviour
             _cc.Move(5 * data.direction * Runner.DeltaTime);
             if (data.direction.sqrMagnitude > 0)
                 _forward = data.direction;
-
-            if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner))
+            
+            if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner)) // check if server
             {
                 if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0 && canShoot)
                 {

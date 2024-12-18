@@ -8,9 +8,14 @@ public class Points : NetworkBehaviour
     [Networked] private TickTimer life { get; set; }
     [SerializeField] private float lifeTime = 5f;
     [SerializeField] private int points = 2;
+    private bool isActive;
+    private void Awake()
+    {
+        isActive = true;
+    }
     public override void FixedUpdateNetwork()
     {
-        if (life.Expired(Runner))
+        if (life.Expired(Runner) || !isActive)
         {
             Runner.Despawn(Object);
         }
@@ -27,6 +32,6 @@ public class Points : NetworkBehaviour
         {
             other.GetComponent<Player>().points += points;
         }
-        Runner.Despawn(Object);
+        isActive = false;
     }
 }

@@ -7,9 +7,14 @@ public class ProjectilePickUp : NetworkBehaviour
 {
     [Networked] private TickTimer life { get; set; }
     [SerializeField] private float lifeTime = 5f;
+    private bool isActive;
+    private void Awake()
+    {
+        isActive = true;
+    }
     public override void FixedUpdateNetwork()
     {
-        if (life.Expired(Runner))
+        if (life.Expired(Runner) || !isActive)
         {
             Runner.Despawn(Object);
         }
@@ -26,6 +31,6 @@ public class ProjectilePickUp : NetworkBehaviour
         {
             other.GetComponent<Player>().projectileNumber++;
         }
-        Runner.Despawn(Object);
+        isActive = false;
     }
 }

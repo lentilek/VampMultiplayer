@@ -33,7 +33,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
         gameObject.AddComponent<RunnerSimulatePhysics3D>();
-
+        RunnerSimulatePhysics3D cps = GetComponent<RunnerSimulatePhysics3D>();
+        Debug.Log(cps.ToString());
+        cps.ClientPhysicsSimulation = ClientPhysicsSimulation.SimulateAlways;
+        Debug.Log(cps.ToString());
+        //_runner.SetIsSimulated(Object, false);
 
         // Create the NetworkSceneInfo from the current scene
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
@@ -129,7 +133,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
         {
             runner.Despawn(networkObject);
-            _spawnedCharacters.Remove(player);
+            //_spawnedCharacters.Remove(player);
         }
     }
     private bool _mouseButton0;
@@ -187,7 +191,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         int i = 0;
         foreach (var player in _spawnedCharacters.Values)
         {
-            Debug.Log("weeee");
+            //Debug.Log("weeee");
             playerUI[i].SetActive(true);
             playersInGamePointsUI[i].text = $"Points: {player.GetComponent<Player>().points}";
             i++;
