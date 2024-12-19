@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,11 @@ public class GeneralUI : MonoBehaviour
     [SerializeField] private GameObject won;
     [SerializeField] private GameObject lost;
     [HideInInspector] public bool endGame;
+
+    [SerializeField] public GameObject hubBig;
+    [SerializeField] public GameObject[] playerUI;
+    [SerializeField] public TextMeshProUGUI[] playerUIPoints;
+    [SerializeField] public GameObject[] playerAvatars;
     private void Awake()
     {
         if (Instance == null)

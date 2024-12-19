@@ -48,7 +48,7 @@ public class Player : NetworkBehaviour
             if (data.direction.sqrMagnitude > 0)
                 _forward = data.direction;
             
-            if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner)) // check if server
+            if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner) && Runner.IsServer) // check if server
             {
                 if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0 && canShoot)
                 {
@@ -93,7 +93,7 @@ public class Player : NetworkBehaviour
     {
         yield return new WaitForSeconds(time);
         isPlaying = true;
-        Timer.Instance.StartTiming();
+        //Timer.Instance.StartTiming();
     }
     IEnumerator ShootingNot()
     {
@@ -119,4 +119,26 @@ public class Player : NetworkBehaviour
     {
         GeneralUI.Instance.Win();
     }*/
+
+
+
+    ///////////////////////
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_HUB(bool isHUBUp, int[] points, RpcInfo info = default)
+    {
+        Debug.Log("a");
+        GeneralUI.Instance.hubBig.SetActive(isHUBUp);
+        int i = 0;
+        foreach (int p in points)
+        {
+            GeneralUI.Instance.playerUI[i].SetActive(true);
+            GeneralUI.Instance.playerAvatars[i].SetActive(true);
+            GeneralUI.Instance.playerUIPoints[i].text = $"Points: {p}";
+            i++;
+        }
+        if(!isHUBUp)
+        {
+            Timer.Instance.StartTiming();
+        }
+    }
 }

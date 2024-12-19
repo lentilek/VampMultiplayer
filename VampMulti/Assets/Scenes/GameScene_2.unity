@@ -7679,6 +7679,7 @@ RectTransform:
   m_Children:
   - {fileID: 1699342779}
   - {fileID: 1314946678}
+  - {fileID: 1894629347}
   m_Father: {fileID: 442933670}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -11641,8 +11642,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1894629347}
+  m_Children: []
   m_Father: {fileID: 791804698}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -15881,6 +15881,22 @@ MonoBehaviour:
   won: {fileID: 547175913}
   lost: {fileID: 1374638752}
   endGame: 0
+  hubBig: {fileID: 1028199141}
+  playerUI:
+  - {fileID: 791804697}
+  - {fileID: 1926696118}
+  - {fileID: 181963897}
+  - {fileID: 781099618}
+  playerUIPoints:
+  - {fileID: 1894629348}
+  - {fileID: 617930125}
+  - {fileID: 804268637}
+  - {fileID: 1483420300}
+  playerAvatars:
+  - {fileID: 1014759352}
+  - {fileID: 194808403}
+  - {fileID: 346286819}
+  - {fileID: 1749405911}
 --- !u!1001 &1715231012
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17123,11 +17139,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1314946678}
+  m_Father: {fileID: 791804698}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.7, y: -130.00002}
+  m_AnchoredPosition: {x: 0.7, y: -121.99996}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1894629348

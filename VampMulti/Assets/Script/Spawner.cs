@@ -11,21 +11,26 @@ using Unity.VisualScripting;
 
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
+    public static Spawner Instance;
+
     private NetworkRunner _runner;
     [SerializeField] private GameObject hub;
-    [SerializeField] private GameObject hubBig;
+    [SerializeField] public GameObject hubBig;
     [SerializeField] private GameObject objectSpawner;
     [SerializeField] private GameObject startButton;
-    [SerializeField] private GameObject[] playerUI;
-    [SerializeField] private TextMeshProUGUI[] playerUIPoints;
-    [SerializeField] private GameObject[] playerAvatars;
-    private List<TextMeshProUGUI> playersInGamePointsUI = new List<TextMeshProUGUI>();
+    [SerializeField] public GameObject[] playerUI;
+    [SerializeField] public TextMeshProUGUI[] playerUIPoints;
+    [SerializeField] public GameObject[] playerAvatars;
+    [HideInInspector] public List<TextMeshProUGUI> playersInGamePointsUI = new List<TextMeshProUGUI>();
+    [HideInInspector] public List<int> points = new List<int>();
+    private Player playerHost;
     private void Awake()
     {
         playersInGamePointsUI.Clear();
         hub.SetActive(true);
         startButton.SetActive(false);
         objectSpawner.SetActive(false);
+        points.Clear();
     }
     async void StartGame(GameMode mode)
     {
@@ -64,7 +69,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     public void StartClient()
     {
         hub.SetActive(false);
-        hubBig.SetActive(false);
+        //hubBig.SetActive(false);
         StartGame(GameMode.Client);
     }
     public void StartGame()
@@ -73,28 +78,31 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             player.GetComponent<Player>().StartGame(1f);
         }
+        playerHost.RPC_HUB(false, points.ToArray());
         objectSpawner.SetActive(true);
         startButton.SetActive(false);
     }
     [SerializeField] private NetworkPrefabRef[] _playerPrefab;
-    private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+    [HideInInspector] public Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (runner.IsServer)
         {
-            Vector3 spawnPosition = new Vector3(0,0,0);
-            if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 2)
+            Vector3 spawnPosition = new Vector3(0, 0, 0);
+            if (player.RawEncoded % runner.Config.Simulation.PlayerCount == 2)
             {
-                startButton.SetActive(true);            
+                startButton.SetActive(true);
                 spawnPosition = new Vector3(-8, 1f, 3);
                 playerUI[0].SetActive(true);
                 playerAvatars[0].SetActive(true);
                 playersInGamePointsUI.Add(playerUIPoints[0]);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[0], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
+                playerHost = networkPlayerObject.GetComponent<Player>();
+                points.Add(networkPlayerObject.GetComponent<Player>().points);
             }
-            else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 3)
+            else if (player.RawEncoded % runner.Config.Simulation.PlayerCount == 3)
             {
                 spawnPosition = new Vector3(8, 1f, 3);
                 playerUI[1].SetActive(true);
@@ -102,8 +110,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 playersInGamePointsUI.Add(playerUIPoints[1]);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[1], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
+                points.Add(networkPlayerObject.GetComponent<Player>().points);
             }
-            else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 4)
+            else if (player.RawEncoded % runner.Config.Simulation.PlayerCount == 4)
             {
                 spawnPosition = new Vector3(-8, 1, -4);
                 playerUI[2].SetActive(true);
@@ -111,8 +120,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 playersInGamePointsUI.Add(playerUIPoints[2]);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[2], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
+                points.Add(networkPlayerObject.GetComponent<Player>().points);
             }
-            else if(player.RawEncoded % runner.Config.Simulation.PlayerCount == 5)
+            else if (player.RawEncoded % runner.Config.Simulation.PlayerCount == 5)
             {
                 spawnPosition = new Vector3(8, 1, -4);
                 playerUI[3].SetActive(true);
@@ -120,11 +130,13 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 playersInGamePointsUI.Add(playerUIPoints[3]);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[3], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
+                points.Add(networkPlayerObject.GetComponent<Player>().points);
             }
             // Create a unique position for the player
             // Keep track of the player avatars for easy access
             //Debug.Log(player.RawEncoded % runner.Config.Simulation.PlayerCount);
             PointsUpdate();
+            playerHost.RPC_HUB(true, points.ToArray());
         }
     }
 
@@ -133,7 +145,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
         {
             runner.Despawn(networkObject);
-            //_spawnedCharacters.Remove(player);
+            _spawnedCharacters.Remove(player);
         }
     }
     private bool _mouseButton0;
@@ -191,9 +203,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         int i = 0;
         foreach (var player in _spawnedCharacters.Values)
         {
-            //Debug.Log("weeee");
+            points[i] = player.GetComponent<Player>().points;
             playerUI[i].SetActive(true);
-            playersInGamePointsUI[i].text = $"Points: {player.GetComponent<Player>().points}";
+            playersInGamePointsUI[i].text = $"Points: {points[i]}";
             i++;
         }
     }
@@ -202,11 +214,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         int i = 0;
         //int pointsBest = -1;
         //List<Player> winners= new List<Player>();
-        foreach(var player in _spawnedCharacters.Values)
+        foreach (var player in _spawnedCharacters.Values)
         {
             playerUI[i].SetActive(false);
-            playerUI[i+4].SetActive(true);
-            playerUIPoints[i+4].text = $"Points: {player.GetComponent<Player>().points}";
+            playerUI[i + 4].SetActive(true);
+            playerUIPoints[i + 4].text = $"Points: {player.GetComponent<Player>().points}";
             /*if(player.GetComponent<Player>().points == pointsBest)
             {
                 winners.Add(player.GetComponent<Player>());
