@@ -156,7 +156,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         _mouseButton0 = _mouseButton0 || Input.GetMouseButton(0);
         if(playerHost != null) PointsUpdate();
-        if (GeneralUI.Instance.endGame && !isGameEnded)
+        if (playerHost != null && GeneralUI.Instance.endGame && !isGameEnded)
         {
             EndGame();
             playerHost.RPC_FinishGame(points.ToArray());

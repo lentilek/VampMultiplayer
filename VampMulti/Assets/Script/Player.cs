@@ -152,26 +152,27 @@ public class Player : NetworkBehaviour
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
     public void RPC_FinishGame(int[] points, RpcInfo info = default)
     {
-        //int pointsBest = -1;
-        //List<Player> winners= new List<Player>();
+        int pointsBest = points[0];
         for (int i = 0; i < points.Length; i++)
         {
             GeneralUI.Instance.playerUI[i].SetActive(false);
             GeneralUI.Instance.playerUI[i + 4].SetActive(true);
             GeneralUI.Instance.playerUIPoints[i + 4].text = $"Points: {points[i]}";
-            /*if(player.GetComponent<Player>().points == pointsBest)
+            if (points[i] > pointsBest)
             {
-                winners.Add(player.GetComponent<Player>());
-            }else if(player.GetComponent<Player>().points > pointsBest || i == 0)
-            {
-                winners.Clear();
-                winners.Add(player.GetComponent<Player>());
-                pointsBest = player.GetComponent<Player>().points;
-            }*/
+                pointsBest = points[i];
+            }
         }
-        /*foreach (Player player in winners)
+        Winner(pointsBest);
+    }
+
+    public void Winner(int bestScore)
+    {
+        Debug.Log(points);
+        Debug.Log(bestScore);
+       if(points == bestScore)
         {
-            player.Won();
-        }*/
+            GeneralUI.Instance.Win();
+        }
     }
 }
