@@ -29,7 +29,7 @@ public class Projectile : NetworkBehaviour
     {
         life = TickTimer.CreateFromSeconds(Runner, 5.0f);
     }
-    private void OnCollisionEnter(Collision collision)
+    /*private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -38,7 +38,22 @@ public class Projectile : NetworkBehaviour
             collision.gameObject.GetComponent<Player>().points -= points;
             isActive = false;
         }
-        if (!collision.gameObject.CompareTag("Pickable"))
+        else if (!collision.gameObject.CompareTag("Pickable"))
+        {
+            GetComponent<SphereCollider>().enabled = false;
+            isActive = false;
+        }
+    }*/
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            GetComponent<SphereCollider>().enabled = false;
+            other.GetComponent<Player>().points -= points;
+            isActive = false;
+        }
+        else if (!other.CompareTag("Pickable"))
         {
             GetComponent<SphereCollider>().enabled = false;
             isActive = false;
