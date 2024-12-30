@@ -42,9 +42,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         
         gameObject.AddComponent<RunnerSimulatePhysics3D>();
         RunnerSimulatePhysics3D cps = GetComponent<RunnerSimulatePhysics3D>();
-        Debug.Log(cps.ToString());
+        //Debug.Log(cps.ToString());
         cps.ClientPhysicsSimulation = ClientPhysicsSimulation.Disabled;
-        Debug.Log(cps.ToString());
+        //Debug.Log(cps.ToString());
         //_runner.SetIsSimulated(Object, false);
 
         // Create the NetworkSceneInfo from the current scene
