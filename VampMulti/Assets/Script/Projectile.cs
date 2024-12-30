@@ -33,12 +33,14 @@ public class Projectile : NetworkBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            GetComponent<SphereCollider>().enabled = false;
             Debug.Log("-points");
             collision.gameObject.GetComponent<Player>().points -= points;
             isActive = false;
         }
         if (!collision.gameObject.CompareTag("Pickable"))
         {
+            GetComponent<SphereCollider>().enabled = false;
             isActive = false;
         }
     }

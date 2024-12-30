@@ -6,7 +6,7 @@ using UnityEngine;
 public class SpeedUp : NetworkBehaviour
 {
     [Networked] private TickTimer life { get; set; }
-    [SerializeField] private float lifeTime = 5f;
+    [SerializeField] public float lifeTime = 5f;
     [SerializeField] private float speedUp;
     [SerializeField] private float buffTime;
     private bool isActive;
@@ -29,6 +29,7 @@ public class SpeedUp : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        GetComponent<SphereCollider>().enabled = false;
         if (other.tag == "Player")
         {
             other.GetComponent<Player>().SpeedUp(speedUp, buffTime);

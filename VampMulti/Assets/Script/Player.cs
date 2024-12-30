@@ -52,7 +52,7 @@ public class Player : NetworkBehaviour
             {
                 if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0 && canShoot)
                 {
-                    Debug.Log(Runner.UserId);
+                    //Debug.Log(Runner.UserId);
                     canShoot = false;
                     StartCoroutine(ShootingNot());
                     projectileNumber--;
@@ -103,7 +103,7 @@ public class Player : NetworkBehaviour
     }
     public void Endgame()
     {
-        Debug.Log("miau");
+        //Debug.Log("miau");
         isPlaying = false;
         if(ObjectSpawn.Instance!= null)
         {

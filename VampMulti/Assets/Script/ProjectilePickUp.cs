@@ -6,7 +6,7 @@ using UnityEngine;
 public class ProjectilePickUp : NetworkBehaviour
 {
     [Networked] private TickTimer life { get; set; }
-    [SerializeField] private float lifeTime = 5f;
+    [SerializeField] public float lifeTime = 5f;
     private bool isActive;
     private void Awake()
     {
@@ -27,6 +27,7 @@ public class ProjectilePickUp : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        GetComponent<SphereCollider>().enabled = false;
         if (other.tag == "Player")
         {
             other.GetComponent<Player>().projectileNumber++;

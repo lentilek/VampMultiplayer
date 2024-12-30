@@ -6,7 +6,7 @@ using UnityEngine;
 public class Points : NetworkBehaviour
 {
     [Networked] private TickTimer life { get; set; }
-    [SerializeField] private float lifeTime = 5f;
+    [SerializeField] public float lifeTime = 5f;
     [SerializeField] private int points = 2;
     private bool isActive;
     private void Awake()
@@ -28,6 +28,7 @@ public class Points : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        GetComponent<SphereCollider>().enabled = false;
         if (other.tag == "Player")
         {
             other.GetComponent<Player>().points += points;
