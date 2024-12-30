@@ -15887,11 +15887,19 @@ MonoBehaviour:
   - {fileID: 1926696118}
   - {fileID: 181963897}
   - {fileID: 781099618}
+  - {fileID: 1409356612}
+  - {fileID: 71126091}
+  - {fileID: 77304564}
+  - {fileID: 1183632906}
   playerUIPoints:
   - {fileID: 1894629348}
   - {fileID: 617930125}
   - {fileID: 804268637}
   - {fileID: 1483420300}
+  - {fileID: 2079060884}
+  - {fileID: 27252426}
+  - {fileID: 1437205884}
+  - {fileID: 768073289}
   playerAvatars:
   - {fileID: 1014759352}
   - {fileID: 194808403}
@@ -19560,7 +19568,7 @@ PrefabInstance:
     - target: {fileID: 2793857880143800590, guid: 4aed2c54c8785c24cba77a56a251453a,
         type: 3}
       propertyPath: timeMax
-      value: 180
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2793857880143800590, guid: 4aed2c54c8785c24cba77a56a251453a,
         type: 3}

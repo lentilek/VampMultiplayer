@@ -33,6 +33,7 @@ public class Projectile : NetworkBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            Debug.Log("-points");
             collision.gameObject.GetComponent<Player>().points -= points;
             isActive = false;
         }

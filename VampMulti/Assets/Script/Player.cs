@@ -52,6 +52,7 @@ public class Player : NetworkBehaviour
             {
                 if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0 && canShoot)
                 {
+                    Debug.Log(Runner.UserId);
                     canShoot = false;
                     StartCoroutine(ShootingNot());
                     projectileNumber--;
@@ -126,19 +127,51 @@ public class Player : NetworkBehaviour
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
     public void RPC_HUB(bool isHUBUp, int[] points, RpcInfo info = default)
     {
-        Debug.Log("a");
+        //Debug.Log("a");
         GeneralUI.Instance.hubBig.SetActive(isHUBUp);
-        int i = 0;
-        foreach (int p in points)
+        for (int i = 0; i < points.Length; i++)
         {
             GeneralUI.Instance.playerUI[i].SetActive(true);
             GeneralUI.Instance.playerAvatars[i].SetActive(true);
-            GeneralUI.Instance.playerUIPoints[i].text = $"Points: {p}";
-            i++;
+            GeneralUI.Instance.playerUIPoints[i].text = $"Points: {points[i]}";
         }
         if(!isHUBUp)
         {
             Timer.Instance.StartTiming();
         }
+    }
+
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_PointsUpdate(int[] points, RpcInfo info = default)
+    {
+        for(int i =0; i < points.Length; i++)
+        {
+            GeneralUI.Instance.playerUIPoints[i].text = $"PointsL {points[i]}";
+        }
+    }
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_FinishGame(int[] points, RpcInfo info = default)
+    {
+        //int pointsBest = -1;
+        //List<Player> winners= new List<Player>();
+        for (int i = 0; i < points.Length; i++)
+        {
+            GeneralUI.Instance.playerUI[i].SetActive(false);
+            GeneralUI.Instance.playerUI[i + 4].SetActive(true);
+            GeneralUI.Instance.playerUIPoints[i + 4].text = $"Points: {points[i]}";
+            /*if(player.GetComponent<Player>().points == pointsBest)
+            {
+                winners.Add(player.GetComponent<Player>());
+            }else if(player.GetComponent<Player>().points > pointsBest || i == 0)
+            {
+                winners.Clear();
+                winners.Add(player.GetComponent<Player>());
+                pointsBest = player.GetComponent<Player>().points;
+            }*/
+        }
+        /*foreach (Player player in winners)
+        {
+            player.Won();
+        }*/
     }
 }

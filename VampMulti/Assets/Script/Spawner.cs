@@ -24,8 +24,10 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     [HideInInspector] public List<TextMeshProUGUI> playersInGamePointsUI = new List<TextMeshProUGUI>();
     [HideInInspector] public List<int> points = new List<int>();
     private Player playerHost;
+    private bool isGameEnded;
     private void Awake()
     {
+        isGameEnded = false;
         playersInGamePointsUI.Clear();
         hub.SetActive(true);
         startButton.SetActive(false);
@@ -37,10 +39,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
+        
         gameObject.AddComponent<RunnerSimulatePhysics3D>();
         RunnerSimulatePhysics3D cps = GetComponent<RunnerSimulatePhysics3D>();
         Debug.Log(cps.ToString());
-        cps.ClientPhysicsSimulation = ClientPhysicsSimulation.SimulateAlways;
+        cps.ClientPhysicsSimulation = ClientPhysicsSimulation.Disabled;
         Debug.Log(cps.ToString());
         //_runner.SetIsSimulated(Object, false);
 
@@ -149,15 +152,14 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
     private bool _mouseButton0;
-    private float time;
     private void Update()
     {
         _mouseButton0 = _mouseButton0 || Input.GetMouseButton(0);
-        time = Timer.Instance.currentTime;
-        PointsUpdate();
-        if (GeneralUI.Instance.endGame)
+        if(playerHost != null) PointsUpdate();
+        if (GeneralUI.Instance.endGame && !isGameEnded)
         {
             EndGame();
+            playerHost.RPC_FinishGame(points.ToArray());
         }
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
@@ -208,9 +210,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             playersInGamePointsUI[i].text = $"Points: {points[i]}";
             i++;
         }
+        playerHost.RPC_PointsUpdate(points.ToArray());
     }
     public void EndGame()
     {
+        isGameEnded = true;
         int i = 0;
         //int pointsBest = -1;
         //List<Player> winners= new List<Player>();
