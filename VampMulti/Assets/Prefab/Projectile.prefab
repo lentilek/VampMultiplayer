@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 1511052615563286567}
   - component: {fileID: 5457026057636957293}
   - component: {fileID: 4115328374141218942}
+  - component: {fileID: 7634095376359679728}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Pickable
@@ -165,6 +166,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4115328374141218942}
+  - {fileID: 7634095376359679728}
 --- !u!135 &5457026057636957293
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -200,6 +202,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 16
   points: 3
+--- !u!114 &7634095376359679728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5692527984484615747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0
+    Scale: 0.01
 --- !u!1 &7624600946062529104
 GameObject:
   m_ObjectHideFlags: 0
