@@ -23,6 +23,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] public GameObject[] playerAvatars;
     [HideInInspector] public List<TextMeshProUGUI> playersInGamePointsUI = new List<TextMeshProUGUI>();
     [HideInInspector] public List<int> points = new List<int>();
+    [HideInInspector] public List<int> bulletsNumber = new List<int>();
     private Player playerHost;
     private bool isGameEnded;
     private void Awake()
@@ -33,6 +34,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         startButton.SetActive(false);
         objectSpawner.SetActive(false);
         points.Clear();
+        bulletsNumber.Clear();
     }
     async void StartGame(GameMode mode)
     {
@@ -104,6 +106,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 _spawnedCharacters.Add(player, networkPlayerObject);
                 playerHost = networkPlayerObject.GetComponent<Player>();
                 points.Add(networkPlayerObject.GetComponent<Player>().points);
+                bulletsNumber.Add(networkPlayerObject.GetComponent<Player>().projectileNumber);
             }
             else if (player.RawEncoded % runner.Config.Simulation.PlayerCount == 3)
             {
@@ -114,6 +117,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[1], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
                 points.Add(networkPlayerObject.GetComponent<Player>().points);
+                bulletsNumber.Add(networkPlayerObject.GetComponent<Player>().projectileNumber);
             }
             else if (player.RawEncoded % runner.Config.Simulation.PlayerCount == 4)
             {
@@ -124,6 +128,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[2], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
                 points.Add(networkPlayerObject.GetComponent<Player>().points);
+                bulletsNumber.Add(networkPlayerObject.GetComponent<Player>().projectileNumber);
             }
             else if (player.RawEncoded % runner.Config.Simulation.PlayerCount == 5)
             {
@@ -134,6 +139,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab[3], spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
                 points.Add(networkPlayerObject.GetComponent<Player>().points);
+                bulletsNumber.Add(networkPlayerObject.GetComponent<Player>().projectileNumber);
             }
             // Create a unique position for the player
             // Keep track of the player avatars for easy access
@@ -155,7 +161,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     private void Update()
     {
         _mouseButton0 = _mouseButton0 || Input.GetMouseButton(0);
-        if(playerHost != null) PointsUpdate();
+        if(playerHost != null && !isGameEnded) PointsUpdate();
         if (playerHost != null && GeneralUI.Instance.endGame && !isGameEnded)
         {
             EndGame();
@@ -208,9 +214,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             points[i] = player.GetComponent<Player>().points;
             playerUI[i].SetActive(true);
             playersInGamePointsUI[i].text = $"Points: {points[i]}";
+
+            bulletsNumber[i] = player.GetComponent<Player>().projectileNumber;
             i++;
         }
-        playerHost.RPC_PointsUpdate(points.ToArray());
+        playerHost.RPC_PointsUpdate(points.ToArray(), bulletsNumber.ToArray());
     }
     public void EndGame()
     {

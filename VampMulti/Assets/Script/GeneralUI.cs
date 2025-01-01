@@ -17,6 +17,7 @@ public class GeneralUI : MonoBehaviour
     [SerializeField] public GameObject[] playerUI;
     [SerializeField] public TextMeshProUGUI[] playerUIPoints;
     [SerializeField] public GameObject[] playerAvatars;
+    public TextMeshProUGUI[] playerBulletsTXT;
     private void Awake()
     {
         if (Instance == null)

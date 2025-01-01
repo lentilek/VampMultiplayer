@@ -142,11 +142,12 @@ public class Player : NetworkBehaviour
     }
 
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void RPC_PointsUpdate(int[] points, RpcInfo info = default)
+    public void RPC_PointsUpdate(int[] points, int[] bullets, RpcInfo info = default)
     {
         for(int i =0; i < points.Length; i++)
         {
-            GeneralUI.Instance.playerUIPoints[i].text = $"PointsL {points[i]}";
+            GeneralUI.Instance.playerUIPoints[i].text = $"Points: {points[i]}";
+            GeneralUI.Instance.playerBulletsTXT[i].text = $"{bullets[i]}";
         }
     }
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
