@@ -18,6 +18,7 @@ public class GeneralUI : MonoBehaviour
     [SerializeField] public TextMeshProUGUI[] playerUIPoints;
     [SerializeField] public GameObject[] playerAvatars;
     public TextMeshProUGUI[] playerBulletsTXT;
+    public GameObject[] winnerImages;
     private void Awake()
     {
         if (Instance == null)
@@ -50,7 +51,7 @@ public class GeneralUI : MonoBehaviour
     public void GameEnd()
     {
         gameEnd.SetActive(true);        
-        lost.SetActive(true);
+        //lost.SetActive(true);
         endGame = true;
     }
     public void Win()

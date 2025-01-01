@@ -154,6 +154,7 @@ public class Player : NetworkBehaviour
     public void RPC_FinishGame(int[] points, RpcInfo info = default)
     {
         int pointsBest = points[0];
+        int winnerIndex = 0;
         for (int i = 0; i < points.Length; i++)
         {
             GeneralUI.Instance.playerUI[i].SetActive(false);
@@ -162,18 +163,20 @@ public class Player : NetworkBehaviour
             if (points[i] > pointsBest)
             {
                 pointsBest = points[i];
+                winnerIndex = i;
             }
         }
-        Winner(pointsBest);
+        Winner(pointsBest, winnerIndex);
     }
 
-    public void Winner(int bestScore)
+    public void Winner(int bestScore, int winnerIndex)
     {
-        Debug.Log(points);
-        Debug.Log(bestScore);
-       if(points == bestScore)
-        {
-            GeneralUI.Instance.Win();
-        }
+        //Debug.Log(points);
+        //Debug.Log(bestScore);
+        /*if(points == bestScore)
+         {
+             GeneralUI.Instance.Win();
+         }*/
+        GeneralUI.Instance.winnerImages[winnerIndex].SetActive(true);
     }
 }
