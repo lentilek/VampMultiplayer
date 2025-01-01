@@ -46,6 +46,7 @@ public class GeneralUI : MonoBehaviour
     }
     public void MainMenu()
     {
+        AudioManager.Instance.PlaySound("click");
         SceneManager.LoadScene(0);
     }
     public void GameEnd()

@@ -24,7 +24,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     [HideInInspector] public List<TextMeshProUGUI> playersInGamePointsUI = new List<TextMeshProUGUI>();
     [HideInInspector] public List<int> points = new List<int>();
     [HideInInspector] public List<int> bulletsNumber = new List<int>();
-    private Player playerHost;
+    [HideInInspector] public Player playerHost;
     private bool isGameEnded;
     private void Awake()
     {
@@ -68,17 +68,20 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void StartHost()
     {
+        AudioManager.Instance.PlaySound("click");
         hub.SetActive(false);
         StartGame(GameMode.Host);
     }
     public void StartClient()
     {
+        AudioManager.Instance.PlaySound("click");
         hub.SetActive(false);
         //hubBig.SetActive(false);
         StartGame(GameMode.Client);
     }
     public void StartGame()
     {
+        AudioManager.Instance.PlaySound("click");
         foreach (var player in _spawnedCharacters.Values)
         {
             player.GetComponent<Player>().StartGame(1f);

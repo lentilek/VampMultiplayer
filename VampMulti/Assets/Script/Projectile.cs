@@ -49,11 +49,12 @@ public class Projectile : NetworkBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            //AudioManager.Instance.PlaySound("hit");
             GetComponent<SphereCollider>().enabled = false;
             other.GetComponent<Player>().points -= points;
             isActive = false;
         }
-        else if (!other.CompareTag("Pickable"))
+        else if (!other.CompareTag("Pickable") && !other.CompareTag("Point") && !other.CompareTag("Bullet"))
         {
             GetComponent<SphereCollider>().enabled = false;
             isActive = false;

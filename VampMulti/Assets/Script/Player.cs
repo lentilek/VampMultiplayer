@@ -52,6 +52,8 @@ public class Player : NetworkBehaviour
             {
                 if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0 && canShoot)
                 {
+                    //AudioManager.Instance.PlaySound("throw");
+                    RPC_Sound("throw");
                     //Debug.Log(Runner.UserId);
                     canShoot = false;
                     StartCoroutine(ShootingNot());
@@ -67,7 +69,19 @@ public class Player : NetworkBehaviour
             }
         }
     }
-
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Pickable"))
+        {
+            RPC_Sound("pickUp");
+        }else if (other.CompareTag("Point"))
+        {
+            RPC_Sound("point");
+        }else if (other.CompareTag("Bullet"))
+        {
+            RPC_Sound("hit");
+        }
+    }
     public void SpeedUp(float speedUp, float time)
     {
         _cc.maxSpeed = speedUp;
@@ -153,6 +167,7 @@ public class Player : NetworkBehaviour
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
     public void RPC_FinishGame(int[] points, RpcInfo info = default)
     {
+        AudioManager.Instance.PlaySound("endgame");
         int pointsBest = points[0];
         int winnerIndex = 0;
         for (int i = 0; i < points.Length; i++)
@@ -178,5 +193,11 @@ public class Player : NetworkBehaviour
              GeneralUI.Instance.Win();
          }*/
         GeneralUI.Instance.winnerImages[winnerIndex].SetActive(true);
+    }
+
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_Sound(string sound, RpcInfo info = default)
+    {
+        AudioManager.Instance.PlaySound(sound);
     }
 }

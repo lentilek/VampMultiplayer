@@ -32,6 +32,7 @@ public class SpeedUp : NetworkBehaviour
         GetComponent<SphereCollider>().enabled = false;
         if (other.tag == "Player")
         {
+            //AudioManager.Instance.PlaySound("pickUp");
             other.GetComponent<Player>().SpeedUp(speedUp, buffTime);
         }
         isActive = false;

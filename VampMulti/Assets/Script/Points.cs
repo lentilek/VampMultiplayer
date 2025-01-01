@@ -31,6 +31,7 @@ public class Points : NetworkBehaviour
         GetComponent<SphereCollider>().enabled = false;
         if (other.tag == "Player")
         {
+            //AudioManager.Instance.PlaySound("point");
             other.GetComponent<Player>().points += points;
         }
         isActive = false;
