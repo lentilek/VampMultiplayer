@@ -19,6 +19,9 @@ public class Player : NetworkBehaviour
 
     [HideInInspector] public bool isPlaying;
 
+    private bool canShoot;
+    private int speedBoost;
+
     private void Awake()
     {
         //boostIcon.SetActive(false);
@@ -26,8 +29,16 @@ public class Player : NetworkBehaviour
         _cc = GetComponent<NetworkCharacterController>();
         points = 0;
         _cc.maxSpeed = speed;
+        canShoot = true;
+        speedBoost = 0;
     }
-
+    private void Update()
+    {
+        if(Timer.Instance.currentTime <= 0 && isPlaying)
+        {
+            Endgame();
+        }
+    }
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputData data) && isPlaying)
@@ -36,11 +47,16 @@ public class Player : NetworkBehaviour
             _cc.Move(5 * data.direction * Runner.DeltaTime);
             if (data.direction.sqrMagnitude > 0)
                 _forward = data.direction;
-
-            if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner))
+            
+            if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner) && Runner.IsServer) // check if server
             {
-                if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0)
+                if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && projectileNumber > 0 && canShoot)
                 {
+                    //AudioManager.Instance.PlaySound("throw");
+                    RPC_Sound("throw");
+                    //Debug.Log(Runner.UserId);
+                    canShoot = false;
+                    StartCoroutine(ShootingNot());
                     projectileNumber--;
                     delay = TickTimer.CreateFromSeconds(Runner, 0.5f);
                     Runner.Spawn(_prefabProjectile,
@@ -53,11 +69,23 @@ public class Player : NetworkBehaviour
             }
         }
     }
-
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Pickable"))
+        {
+            RPC_Sound("pickUp");
+        }else if (other.CompareTag("Point"))
+        {
+            RPC_Sound("point");
+        }else if (other.CompareTag("Bullet"))
+        {
+            RPC_Sound("hit");
+        }
+    }
     public void SpeedUp(float speedUp, float time)
     {
-        StopAllCoroutines();
         _cc.maxSpeed = speedUp;
+        speedBoost++;
         //boostIcon.SetActive(true);
         StartCoroutine(Speed(time));
     }
@@ -65,7 +93,11 @@ public class Player : NetworkBehaviour
     IEnumerator Speed(float time)
     {
         yield return new WaitForSeconds(time);
-        _cc.maxSpeed = speed;
+        speedBoost--;
+        if(speedBoost == 0)
+        {
+            _cc.maxSpeed = speed;
+        }
         //boostIcon.SetActive(false);
     }
     public void StartGame(float time)
@@ -76,5 +108,96 @@ public class Player : NetworkBehaviour
     {
         yield return new WaitForSeconds(time);
         isPlaying = true;
+        //Timer.Instance.StartTiming();
+    }
+    IEnumerator ShootingNot()
+    {
+        yield return new WaitForSeconds(1);
+        canShoot = true;
+    }
+    public void Endgame()
+    {
+        //Debug.Log("miau");
+        isPlaying = false;
+        if(ObjectSpawn.Instance!= null)
+        {
+            ObjectSpawn.Instance.gameObject.SetActive(false);
+        }
+    }
+    public void MainMenu()
+    {
+        GameObject go = FindObjectOfType<Spawner>().gameObject;
+        Destroy(go);
+        SceneManager.LoadScene(0);
+    }
+    /*public void Won()
+    {
+        GeneralUI.Instance.Win();
+    }*/
+
+
+
+    ///////////////////////
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_HUB(bool isHUBUp, int[] points, RpcInfo info = default)
+    {
+        //Debug.Log("a");
+        GeneralUI.Instance.hubBig.SetActive(isHUBUp);
+        for (int i = 0; i < points.Length; i++)
+        {
+            GeneralUI.Instance.playerUI[i].SetActive(true);
+            GeneralUI.Instance.playerAvatars[i].SetActive(true);
+            GeneralUI.Instance.playerUIPoints[i].text = $"Points: {points[i]}";
+        }
+        if(!isHUBUp)
+        {
+            Timer.Instance.StartTiming();
+        }
+    }
+
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_PointsUpdate(int[] points, int[] bullets, RpcInfo info = default)
+    {
+        for(int i =0; i < points.Length; i++)
+        {
+            GeneralUI.Instance.playerUIPoints[i].text = $"Points: {points[i]}";
+            GeneralUI.Instance.playerBulletsTXT[i].text = $"{bullets[i]}";
+        }
+    }
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_FinishGame(int[] points, RpcInfo info = default)
+    {
+        AudioManager.Instance.PlaySound("endgame");
+        int pointsBest = points[0];
+        int winnerIndex = 0;
+        for (int i = 0; i < points.Length; i++)
+        {
+            GeneralUI.Instance.playerUI[i].SetActive(false);
+            GeneralUI.Instance.playerUI[i + 4].SetActive(true);
+            GeneralUI.Instance.playerUIPoints[i + 4].text = $"Points: {points[i]}";
+            if (points[i] > pointsBest)
+            {
+                pointsBest = points[i];
+                winnerIndex = i;
+            }
+        }
+        Winner(pointsBest, winnerIndex);
+    }
+
+    public void Winner(int bestScore, int winnerIndex)
+    {
+        //Debug.Log(points);
+        //Debug.Log(bestScore);
+        /*if(points == bestScore)
+         {
+             GeneralUI.Instance.Win();
+         }*/
+        GeneralUI.Instance.winnerImages[winnerIndex].SetActive(true);
+    }
+
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_Sound(string sound, RpcInfo info = default)
+    {
+        AudioManager.Instance.PlaySound(sound);
     }
 }

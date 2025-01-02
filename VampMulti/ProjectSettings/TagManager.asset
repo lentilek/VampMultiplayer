@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Pickable
+  - Point
+  - Bullet
   layers:
   - Default
   - TransparentFX

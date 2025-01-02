@@ -11,11 +11,11 @@ public class Projectile : NetworkBehaviour
     private bool isActive;
     private void Awake()
     {
-        isActive = false;
+        isActive = true;
     }
     public override void FixedUpdateNetwork()
     {
-        if (life.Expired(Runner) || isActive)
+        if (life.Expired(Runner) || !isActive)
         {
             Runner.Despawn(Object);
         }
@@ -29,16 +29,35 @@ public class Projectile : NetworkBehaviour
     {
         life = TickTimer.CreateFromSeconds(Runner, 5.0f);
     }
-    private void OnCollisionEnter(Collision collision)
+    /*private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            GetComponent<SphereCollider>().enabled = false;
+            Debug.Log("-points");
             collision.gameObject.GetComponent<Player>().points -= points;
-            isActive = true;
+            isActive = false;
         }
-        if (!collision.gameObject.CompareTag("Pickable"))
+        else if (!collision.gameObject.CompareTag("Pickable"))
         {
-            isActive = true;
+            GetComponent<SphereCollider>().enabled = false;
+            isActive = false;
+        }
+    }*/
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            //AudioManager.Instance.PlaySound("hit");
+            GetComponent<SphereCollider>().enabled = false;
+            other.GetComponent<Player>().points -= points;
+            isActive = false;
+        }
+        else if (!other.CompareTag("Pickable") && !other.CompareTag("Point") && !other.CompareTag("Bullet"))
+        {
+            GetComponent<SphereCollider>().enabled = false;
+            isActive = false;
         }
     }
 }
